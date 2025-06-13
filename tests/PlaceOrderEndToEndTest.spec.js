@@ -37,12 +37,21 @@ test.only('Place Order End to End Test', async ({ page }) => {
     await page.locator('#password').fill(password);
     await page.locator("input[value='Login']").click();
     await page.locator("app-login button[type='button']").click();
-     await page.waitForTimeout(3000);
+    await page.waitForTimeout(3000);
     await page.locator('#state').fill('Bundesland');
     await page.waitForTimeout(3000);
     await page.locator('#postal_code').fill('1789');
-    
+
     await page.locator("app-address button[type='button']").click();
+    const dropdown = page.locator('#payment-method');
+    dropdown.selectOption({ label: 'Bank Transfer' });
+    await page.locator('#bank_name').fill('Belfius');
+    await page.locator('#account_name').fill('Tay tay');
+    await page.locator('#account_number').fill('45368456749456');
+    await page.locator("text='Confirm'").click();
+    await expect(page.locator('.help-block')).toContainText('Payment was successful');
+    await page.locator("text='Confirm'").click();
+    await expect(page.locator('#order-confirmation')).toContainText('Thanks for your order! Your invoice number is ');
 
 
 
